@@ -8,5 +8,12 @@ export const textStyles = StyleSheet.create({
     },
     textRegular: {
         fontSize: 16,
-    }
+    },
+    textBold: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    descriptionRegular: {
+        fontSize: 14,
+    },
 })
