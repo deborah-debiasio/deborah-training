@@ -5,9 +5,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import Exercise1Screen from '../screens/Exercise1Screen';
 import Exercise2Screen from '../screens/Exercise2Screen';
+import DeliveryScreen from '../screens/DeliveryScreen';
 
 export const routeNames = {
 	home: 'Home',
+	delivery: 'Delivery',
 	exercise1: 'Exercise1',
 	exercise2: 'Exercise2'
 }
@@ -23,6 +25,7 @@ const AppNavigator = () => {
 				headerShown: false,
 			}}>
 			<Stack.Screen name={routeNames.home} component={HomeScreen} />
+			<Stack.Screen name={routeNames.delivery} component={DeliveryScreen} />
 			<Stack.Screen name={routeNames.exercise1} component={Exercise1Screen} />
 			<Stack.Screen name={routeNames.exercise2} component={Exercise2Screen} />
 		</Stack.Navigator>

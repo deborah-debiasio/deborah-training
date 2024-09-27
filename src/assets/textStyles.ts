@@ -5,5 +5,8 @@ export const textStyles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
+    },
+    textRegular: {
+        fontSize: 16,
     }
 })

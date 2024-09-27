@@ -1,5 +1,7 @@
 
 export const images = {
     backIcon: require('./icons/back.png'),
-    text: require('./icons/text.png'),
+    textIcon: require('./icons/text.png'),
+    exercise1Delivery: require('./icons/exercise1.png'),
+
 }

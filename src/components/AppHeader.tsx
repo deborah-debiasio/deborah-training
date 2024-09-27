@@ -7,21 +7,26 @@ import { textStyles } from "../assets/textStyles"
 interface Props {
     title: string;
     onBackPress?: () => void;
+    onDeliveryPress?: () => void;
 }
 
 export const AppHeader = (props: Props) => {
 
     return <SafeAreaView style={styles.safearea}>
-        <View style={[styles.container, !props.onBackPress && { alignSelf: 'center' }]}>
-            {props.onBackPress && 
-                <TouchableOpacity onPress={props.onBackPress}>
-                    <Image source={images.backIcon} style={styles.backIcon} />
-                </TouchableOpacity>}
+        <View style={styles.container}>
+            <View style={styles.iconContainer}>
+                {props.onBackPress && 
+                    <TouchableOpacity onPress={props.onBackPress}>
+                        <Image source={images.backIcon} style={styles.icon} />
+                    </TouchableOpacity>}
+             </View>
             <Text style={textStyles.headerTitle}>{props.title}</Text>
-            {props.onBackPress && 
-                <TouchableOpacity>
-                    <Image source={images.text} style={styles.backIcon} />
-                </TouchableOpacity>}
+            <View style={styles.iconContainer}>
+                {props.onDeliveryPress && 
+                    <TouchableOpacity onPress={props.onDeliveryPress}>
+                        <Image source={images.textIcon} style={styles.icon} />
+                    </TouchableOpacity>}
+            </View>
         </View>
     </SafeAreaView>
 }
@@ -33,12 +38,17 @@ export const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         paddingVertical: 20,
     },
-    backIcon: {
+    iconContainer: {
+        height: 24,
+        width: 48,
+    },
+    icon: {
         height: 24,
         width: 24,
         tintColor: colors.primaryDark,
+        alignSelf: 'center'
     }
 })
