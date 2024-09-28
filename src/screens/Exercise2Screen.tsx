@@ -11,6 +11,7 @@ import { AppTextInput } from "../components/AppTextInput";
 import { colors } from "../assets/colors";
 import { images } from "../assets/images";
 import { BeerFilters } from "../components/Exercise2/BeerFilters";
+import { textStyles } from "../assets/textStyles";
 
 
 const Exercise2Screen = () => {
@@ -30,6 +31,8 @@ const Exercise2Screen = () => {
 			if (res.data) {
 				setBeers(res.data)
 				setFilteredBeers(res.data);
+				setSearchedValue(undefined);
+				setSelectedMalts(undefined);
 			}
 		} catch (e) {
 			console.log('Error ', e);
@@ -38,19 +41,17 @@ const Exercise2Screen = () => {
 		}
 	}
 
-	const filterBeersByName = (name?: string) => {
-		if (name) {
-			const beersByName = beers.filter((item: Beer) => item.name.includes(name));
-			setFilteredBeers(beersByName);
-		} else {
-			setFilteredBeers(beers);
-		}
-	}
-
-	const filterBeersByMalts = () => {
-		if (selectedMalts) {
-			const beersByMalts = beers.filter((item: Beer) => item.malts === selectedMalts);
-			setFilteredBeers(beersByMalts);
+	const filterBeers = () => {
+		let filtered: Array<Beer> = [];
+		if (!!searchedValue && !!selectedMalts) {
+			filtered = beers.filter((item: Beer) => item.name.includes(searchedValue) && item.malts === selectedMalts);
+			setFilteredBeers(filtered);
+		} else if (!!searchedValue) {
+			filtered = beers.filter((item: Beer) => item.name.includes(searchedValue));
+			setFilteredBeers(filtered);
+		} else if (!!selectedMalts) {
+			filtered = beers.filter((item: Beer) => item.malts === selectedMalts);
+			setFilteredBeers(filtered);
 		} else {
 			setFilteredBeers(beers);
 		}
@@ -71,19 +72,15 @@ const Exercise2Screen = () => {
 	}
 
 	useEffect(() => {
-		filterBeersByName(searchedValue);
-	}, [searchedValue]);
-
-	useEffect(() => {
-		!showFilters && filterBeersByMalts();
-	}, [showFilters]);
+		filterBeers();
+	}, [searchedValue, selectedMalts]);
 
 	useEffect(() => {
 		focused && getBeers();
 		setSearchedValue(undefined);
 	}, [focused]);
 
-	return <View>
+	return <View style={{ flex: 1 }}>
 		<AppHeader title={strings.exercise2} onBackPress={goBack} onDeliveryPress={onDeliveryPress} />
 
 		<View style={styles.filtersContainer}>
@@ -95,17 +92,21 @@ const Exercise2Screen = () => {
 				/>
 			</View>
 			<TouchableOpacity style={styles.filterIconContainer} onPress={() => setShowFilters(true)}>
+				{!!selectedMalts && <View style={styles.usedFilter} />}
 				<Image source={images.filterIcon} style={styles.filterIcon} />
 			</TouchableOpacity>
 		</View>
 		<FlatList
-			contentContainerStyle={{ flexGrow: 1, paddingBottom: 200 }}
+			contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }}
 			data={filteredBeers}
 			keyExtractor={(item: Beer, index: number) => `beer-${index}`}
 			renderItem={({ item }) => <BeerComponent beer={item} />}
 			showsVerticalScrollIndicator={false}
 			refreshing={isRefreshing}
 			onRefresh={() => getBeers(true)}
+			ListEmptyComponent={() => <View style={styles.emptyViewContainer}>
+				<Text style={[textStyles.textRegular, { textAlign: 'center' }]}>{strings.noResults}</Text>
+			</View>}
 		/>
 		<BeerFilters 
 			isVisible={showFilters} 
@@ -139,5 +140,19 @@ export const styles = StyleSheet.create({
 		height: 30,
         width: 30,
         tintColor: colors.primaryDark,
+	},
+	usedFilter: {
+		height: 10,
+		width: 10,
+		borderRadius: 10,
+		backgroundColor: colors.primaryDark,
+		position: 'absolute',
+		right: 10,
+		top: 10,
+	},
+	emptyViewContainer: { 
+		height: '100%', 
+		justifyContent: 'center', 
+		alignItems: 'center' 
 	}
 })

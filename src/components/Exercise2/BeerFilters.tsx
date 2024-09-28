@@ -19,18 +19,35 @@ interface Props {
 
 export const BeerFilters = (props: Props) => {
 	const [radioButtons, setRadioButtons] = useState<Array<RadioButtonProps>>([]);
+	const [selectedItems, setSelectedItems] = useState<string | undefined>();
+
+	const filter = () => {
+		props.setSelectedMalts(selectedItems);
+		props.setModalVisible(false)
+	}
+
+	const cancel = () => {
+		props.setModalVisible(false);
+		setSelectedItems(props.selectedMalts);
+	}
+
+	const reset = () => {
+		props.setSelectedMalts(undefined);
+	}
 
 	useEffect(() => {
-		const values: Array<RadioButtonProps> = [];
-		props.availableMalts.forEach((item: string, index: number) => {
-			values.push({
-				id: item,
-				label: item,
-				value: item
-			})
-		});
-		setRadioButtons(values);
-
+		if (props.isVisible) {
+			const values: Array<RadioButtonProps> = [];
+			props.availableMalts.forEach((item: string, index: number) => {
+				values.push({
+					id: item,
+					label: item,
+					value: item
+				})
+			});
+			setRadioButtons(values);
+			setSelectedItems(props.selectedMalts);
+		}
 	}, [props.isVisible]);
 
 
@@ -44,23 +61,29 @@ export const BeerFilters = (props: Props) => {
 					<Text style={textStyles.textBold}>{strings.filterBeerByMalts}</Text>
 					<RadioGroup 
 						radioButtons={radioButtons} 
-						onPress={props.setSelectedMalts}
-						selectedId={props.selectedMalts}
+						onPress={setSelectedItems}
+						selectedId={selectedItems}
 						containerStyle={styles.radioGroupContainer}
 						labelStyle={textStyles.textRegular}
 					/>
+					<Button 
+						text={strings.filter} 
+						onPress={filter}
+						styles={styles.filterButton}
+					/>
 					<View style={styles.buttonsContainer}>
 						<Button 
-							text={strings.resetFilter} 
-							onPress={() => props.setSelectedMalts(undefined)}
+							text={strings.reset} 
+							onPress={reset}
 							styles={{ marginRight: 5 }}
 						/>
 						<Button 
-							text={strings.filter} 
-							onPress={() => props.setModalVisible(!props.isVisible)}
+							text={strings.cancel} 
+							onPress={cancel}
 							styles={{ marginLeft: 5 }}
 						/>
 					</View>
+					
 				</View>
 			</View>
   	</Modal>;
@@ -79,7 +102,6 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.white,
         borderRadius: 20,
         padding: 35,
-        alignItems: 'center',
         shadowColor: colors.black,
         shadowOffset: {
 			width: 0,
@@ -96,5 +118,8 @@ export const styles = StyleSheet.create({
 	buttonsContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+	},
+	filterButton: {
+		marginVertical: 10,
 	}
 })

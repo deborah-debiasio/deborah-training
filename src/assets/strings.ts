@@ -2,8 +2,10 @@
 export const strings = {
     homeTitle: 'Home',
     filter: 'Filtra',
-    resetFilter: 'Resetta',
+    reset: 'Resetta',
+    cancel: 'Annulla',
     create: 'Crea',
+    noResults: 'Nessun risultato trovato :(',
 
     // Exercise 1
     exercise1: 'Esercizio 1',
